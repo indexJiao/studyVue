@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<head>
+	<title>计划学习VUE-day1</title>
+	<style type="text/css">
+		[v-cloak] {
+		    display: none;
+		}
+
+		.errorClass {
+			color: #ff0;
+		}
+		.active {
+			color: #d4d4d4;
+		}
+
+		.text-danger {
+			color: #f40;
+		}
+	</style>
+</head>
+<body>
+	<div id="test-day1" v-cloak>
+		<div>{{msg}}</div>
+		<input type="text" name="userName1" v-model="userName" @click="cliclUserName">
+		<div>{{stu.name}}</div>
+		<div>{{stu.age}}</div>
+
+		<h1 v-text="msg"></h1><!--更新DOM对象的 textContent-->
+		<div v-html="msg11"></div><!--更新DOM对象的 innerHTML-->
+		<!-- v-bind 当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM -->
+		<!-- 完整语法 -->
+		<a v-bind:href="url">click1</a>
+		<!-- 缩写 -->
+		<a :href="url">click2</a>
+
+		<!--========样式处理 -class和style  v-bind:class="expression" or :class="expression"   表达式的类型：字符串、数组、对象（重点）============================-->
+		<!--1 <div class="active"></div> -->
+		<div v-bind:class="{ active: true }">{{msg}}</div> ===>
+		
+		<!-- 2  <div class="active text-danger"></div>-->
+		<div :class="['active', 'text-danger']">{{msg}}</div> ===>
+		
+		<!-- 3  <div class="active text-danger"></div>-->
+		<div v-bind:class="[{ active: true }, errorClass]">{{msg}}</div>
+		
+
+		<!-- ============style======================= -->
+		<!-- 1 -->
+		<div v-bind:style="{ color: activeColor, 'font-size': fontSize + 'px' }">{{msg}}</div>
+		<!-- 2 将多个 样式对象 应用到一个元素上-->
+		<!-- baseStyles 和 overridingStyles 都是对象 -->
+		<div v-bind:style="[baseStyles, overridingStyles]">{{msg}}</div>
+
+		<!-- ============= v-on  v-on:click="say" or v-on:click="say('参数', $event)"============================================================================ -->
+		<!-- 完整语法 -->
+		<a v-on:click="cliclUserName">click3</a>
+		<!-- 缩写 -->
+		<a @click="cliclUserName">click4</a>
+
+		<!--===========  v-for  对象 通过属性迭代============================================================================================================-->
+		<ul>
+			<template v-for="s2 in obj111"><!--一个参数为value值-->
+				<li>{{s2}}</li>
+				<li>---------------------</li>
+			</template>
+			<template v-for="(s1, s2, s3) in obj111"><!--第一个参数为value值，第二个参数为key值，第三个参数为索引值-->
+				<li>第{{s3}} 个循环：{{s2}}: {{s1}}</li>
+				<li>---------------------</li>
+			</template>
+
+			<template v-for="n in 5"><!--迭代循环整数-->
+				<li>{{n}}</li>
+			</template>
+		</ul>
+
+		<!-- 使用 v-for 的时候提供 key 属性，以获得性能提升   -->
+		<div v-for="site in sites" :key="site.test"> 
+			{{site.test}} <!-- 内容 -->
+				
+		</div>
+
+		<!--=====  v-if：根据表达式的值的真假条件，销毁或重建元素     v-show：根据表达式之真假值，切换元素的 display CSS 属性  ========================-->
+		<p v-show="isShow">这个元素展示出来了吗？？？</p>
+		<p v-if="isShow">这个元素，在HTML结构中吗？？？</p>
+
+		<!--v-once  只渲染元素和组件一次。随后的重新渲染，元素/组件及其所有的子节点将被视为静态内容并跳过-->
+		<!--v-pre  跳过这个元素和它的子元素的编译过程。可以用来显示原始 Mustache 标签。跳过大量没有指令的节点会加快编译。-->
+		
+
+	</div>
+
+	<input type="text" id="txt" />
+	<span id="msgBox"></span>
+
+	<script type="text/javascript" src="./lib/vue.js"></script>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: "#test-day1",
+			data: {
+				msg: '我的第一个示例',
+				msg11: '<h1>hahaha</h1>',
+				url:'www.baidu.com',
+				userName: '',
+				isShow: true, 
+				stu: {
+					name: 'hahah',
+					age: '12'
+				},
+				baseStyles: {
+					color: '#f40'
+				},
+				overridingStyles: {
+					weight: '16px'
+				},
+				errorClass: {
+					errorClass: true
+				},
+				activeColor: 'red',
+				fontSize: '16',
+				sites: [
+					{"test": "111"},
+					{"test": "222"},
+					{"test": "333"}
+				],
+				obj111: {
+					key1:'qqq',
+					key2:'aaa',
+					key3:'eee'
+				}
+			},
+			methods: {
+				cliclUserName: function(){//获取input输入的值
+					let a = this.userName;
+					alert(a);
+				},
+				//==========$nextTick  在DOM更新后，执行某个操作（DOM操作）   ==$el：表示Vue管理区域的根元素，是一个DOM对象=========================???
+				fn() {
+				    this.msg = 'change'
+				    this.$nextTick(function () {
+				      	console.log('$nextTick中打印：', this.$el.children[0].innerText);
+				    })
+				    console.log('直接打印：', this.$el.children[0].innerText);
+				}
+			},
+			computed: {
+
+			}
+
+		});
+
+
+		//====== 添加属性 =====好像没有起作用=======================================================
+		/* 适用于添加单个属性*/
+		Vue.set(vm.stu, 'gender', '15')
+
+		/*适用于添加多个属性*/
+		vm.stu = Object.assign({}, vm.stu, { gender: 'female', height: 180 })
+
+
+		//==========双向绑定的实现原理======================================================================================
+		var txt = document.getElementById('txt'),
+		msgBox = document.getElementById('msgBox'),
+		obj = {}
+
+		// 给对象obj添加msg属性，并设置setter访问器
+		Object.defineProperty(obj, 'msg', {
+			// 设置 obj.msg 执行的操作
+			set: function (curVal) {
+				txt.value = curVal
+				msgBox.innerText = curVal
+			}
+		})
+
+		// 监听文本框的改变
+		txt.addEventListener('input', function (event) {
+			obj.msg = this.value
+		})
+
+		//==========Vue.nextTick(callback)：在DOM更新后，执行某个操作（DOM操作）=================================================
+	</script>
+</body>
+</html>

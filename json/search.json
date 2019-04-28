@@ -1,0 +1,64 @@
+[
+	
+	{
+		"type": "井",
+		"children": [
+			{"type": "井位论证","children":[]},
+			{"type": "钻井设计","children":[]},
+			{"type": "录井类","children":[]},
+			{"type": "试气类","children":[]}
+		]
+	},
+	{
+		"type": "分析化验",
+		"children": [
+			{"type": "岩石力学参数","children":[]},
+			{"type": "地化类","children":[]},
+			{"type": "物性参数","children":[]},
+			{"type": "孔隙结构","children":[]},
+			{"type": "岩石力学类","children":[]},
+			{"type": "含气性分析","children":[]},
+			{"type": "开发试验类","children":[]},
+			{"type": "流体分析","children":[]},
+			{"type": "岩心剖切","children":[]},
+			{"type": "普通薄片鉴定","children":[]}
+		]
+	},
+	{
+		"type": "地震",
+		"children": [
+			{"type": "二维地震资料成果","children":[]},
+			{"type": "三维地震资料成果","children":[]},
+			{"type": "非震成果","children":[]},
+			{"type": "地震资料重处理成果","children":[]}
+		]
+	},
+	{
+		"type": "综合研究",
+		"children": [
+			{"type": "综合研究","children":[]}
+		]
+	},
+	{
+		"type": "野外地质调查",
+		"children": [
+			{"type": "大南盘江地区","children":[]},
+			{"type": "川东南地区","children":[]}
+		]
+	},
+	{
+		"type": "储量",
+		"children": [
+			{"type": "涪陵","children":[]},
+			{"type": "綦江","children":[]},
+			{"type": "黄平","children":[]},
+			{"type": "五指山","children":[]}
+		]
+	},
+	{
+		"type": "测井",
+		"children": [
+			{"type": "测井","children":[]}
+		]
+	}
+]

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8;" >
+	<meta name="keywords" content="HTML, DHTML, CSS, XML, XHTML, JavaScript" >
+	<meta name="description" content="页面模板" >
+	<meta name="author" content="张娇" >
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+	<title>计划学习VUE-day2</title>
+	<style type="text/css">
+		[v-cloak] {
+		    display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="test-day2" v-cloak>
+		<!--=====================   过滤器   ================================================-->
+		<div>{{day2 | sympleDay2}}</div><!--局部过滤器-->
+		<div>{{day2 | allFilters}}</div><!--全局过滤器 通过全局方式创建的过滤器，在任何一个vue实例中都可以使用 使用全局过滤器的时候，需要先创建全局过滤器，再创建Vue实例-->
+
+		<!--===   监控按键是否按下，按下执行函数===============================================-->
+		<input type="button" @keyup.enter="addConter" name="" value="按下开始监听键盘enter，enter按下值加1">
+		<p>点击enter的次数： {{ counter }} 次。</p>
+
+		<!--===  watch 监听函数 watch是一个对象，键是需要观察的表达式，值是对应回调函数  当表达式的值发生变化后，会调用对应的回调函数完成响应的监视操作 ==========-->
+		<input type="text" name="" v-model="text1">
+		<div>上面文本框修改的次数：{{getText1ChangeT}}</div>
+		<input type="text" name="" v-model="testObj2.name">
+		<input type="text" name="" v-model="testObj2.age">
+
+		<!--axios-->
+		<input type="button" name="" value="点击我，发送请求，获取json数据" v-on:click="getData">
+		<div v-show="visible">动态获取的json数据为：{{showGetData}}</div>
+	</div>
+
+	<script type="text/javascript" src="./lib/vue.js"></script>
+	<script type="text/javascript" src="./lib/axios.js"></script>
+	<script type="text/javascript" src="./lib/qs.js"></script>
+	<script type="text/javascript">
+		Vue.filter('allFilters', function (value) {
+		  	// value 表示要过滤的内容
+		  	// 返回值：指定显示在页面中的内容
+		  	return "加全局过滤器 + " + value
+		});
+
+		//将axios对象加到vue中
+		Vue.prototype.$axios = axios;
+
+		// 设置请求公共路径：
+		//axios.defaults.baseURL = 'http://vue.studyit.io'
+
+		//import qs from 'Qs'
+
+		// 通过全局 config.keyCodes 对象自定义键值修饰符别名
+		//Vue.config.keyCodes.f2 = 113
+		// 使用自定义键值修饰符
+		//@keyup.enter.f2 = "add"
+
+		//=========  定义全局指令  ===============================================================
+		// 第一个参数：指令名称
+		// 第二个参数：配置对象，指定指令的钩子函数
+		Vue.directive('directiveName', {
+		  	bind() {},
+		  	update() {}
+		})
+		Vue.directive('directiveName', function() {
+
+		})
+
+		Vue.directive('red', function(el, binding) {
+		  	el.style.color = binging.value
+		})
+
+		var vm = new Vue({
+			el: "#test-day2",
+			data: {
+				day2: '今天第二天学习',
+				counter : 0,
+				text1: '测试监听',
+				testObj2: {
+					name: 'zj',
+					age:12
+				},
+				registText1: 0,
+				visible: false,
+				showGetData: ""
+			},
+			methods: {//方法
+				addConter: function(){
+					this.counter = this.counter + 1;
+				},
+				//===============  url和参数分离，使用对象  ===============================
+				// getData(){
+				// 	this.$axios.get('./json/search.json',{
+				// 		params:{
+				// 			time: nowTime()
+				// 		}
+				// 	})
+				// 	.then(res => {
+				// 		this.visible = true;
+				// 		this.showGetData = res.data[0].type;
+				// 	})
+				// 	.catch(err => {});
+				// },
+				//============  axios() 直接发送get请求  =================================
+				getData(){
+					this.$axios({
+						method: 'get',
+						url: './json/search.json',
+						params:{
+							time: nowTime()
+						}
+					})
+					.then(res => {
+						this.visible = true;
+						this.showGetData = res.data[0].type;
+					})
+					.catch(err => {});
+				},
+				//==============   axios() 直接发送post请求   ==============================================
+				// getData(){
+				// 	let ppp = {
+				// 		id: '111',
+				// 		name: 'zzz'
+				// 	};
+				// 	this.$axios({
+				// 		method: 'post',
+				// 		url: './json/search.json',
+				// 		params:qs.stringify(ppp)
+				// 	})
+				// 	.then(res => {
+				// 		this.visible = true;
+				// 		this.showGetData = res.data[0].type;
+				// 	})
+				// 	.catch(err => {});
+				// },
+				//=================  url和参数分离，使用对象  ===========================================
+				// getData(){
+				// 	let ppp = {
+				// 		id: '111',
+				// 		name: 'zzz'
+				// 	};
+				// 	this.$axios.post('./json/search.json',qs.stringify({
+				// 		time: nowTime(),
+				// 		id: '111',
+				// 		name: 'zzz'
+				// 	}))
+				// 	.then(function(res){
+				// 		this.visible = true;
+				// 		this.showGetData = res.data[0].type;
+				// 	})
+				// 	.catch(function(err){
+
+				// 	});
+				// },
+			},
+			filters: {//局部过滤器
+				sympleDay2: function(value){
+					var myDate = new Date();
+					var month = myDate.getMonth() + 1;
+					var myD = myDate.getFullYear() + "-" + month + "-" + myDate.getDate() + " " + myDate.getHours() + ":" +  myDate.getMinutes() + ":" + myDate.getSeconds();
+					return value + " 当前时间是：" + myD;
+				}
+			},
+			watch: {//监听值的改变
+				text1: function(val, oldVal) {
+					// val 表示当前值
+					// oldVal 表示旧值
+					console.log('当前值为：' + val, '旧值为：' + oldVal);
+					this.registText1 = this.registText1 + 1;
+				},
+
+				// 监听对象属性的变化
+				// 注意：此时，val 和 oldVal 是相同的，都指向同一个对象
+				testObj2: {
+					handler: function (val, oldVal) {//注意：第一次赋默认值时也会执行此函数，但是此时的old为undefined，所以oldVal.name会报错
+						// console.log('当前name为：' + val.name, '旧值为：' + oldVal.name);
+						// console.log('当前age为：' + val.age, '旧值为：' + oldVal.age);
+					},
+					// 深度监听数据变化
+					deep: true,
+					// 立即触发监视
+					immediate: true
+				},
+
+				// 只监视user对象中age属性的变化
+				'testObj2.age': function (val, oldVal) {//注意：第一次赋默认值时不会执行此函数
+					// val 表示当前值
+					// oldVal 表示旧值
+					console.log('当前值为：' + val, '旧值为：' + oldVal);
+				},
+			},
+			computed: {//计算属性  computed中的属性不能与data中的属性同名，否则会报错
+				getText1ChangeT: function (){
+					return this.registText1 + "+又改变了";
+				}
+			},
+			// directives: {//自定义指令
+			// 	taobao: function(el, value){
+			// 	}
+			// },
+			created: function(){//钩子函数，可以调用methods中的方法、改变data中的数据   使用场景：发送请求获取数据
+				this.day2 = "今天第二天学习,但是，学不完了"
+			}
+		});
+
+		var nowTime = () => {
+			var myDate = new Date();
+			var time = myDate.getTime();
+			return time;
+		}
+	</script>
+</body>
+</html>

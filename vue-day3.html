@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8;" >
+	<meta name="keywords" content="HTML, DHTML, CSS, XML, XHTML, JavaScript" >
+	<meta name="description" content="页面模板" >
+	<meta name="author" content="张娇" >
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+	<title>计划学习VUE-day2</title>
+	<style type="text/css">
+		[v-cloak] {
+		    display: none;
+		}
+	</style>
+</head>
+<body>
+
+	
+	<div id="test-day3">
+		<!-- 1 模板字符串 -->
+	  	<my-component></my-component>
+	  	<!-- 2 模板id -->
+	  	<my-component1></my-component1>
+	</div>
+
+	<div id="test-day333">
+		<!-- 1 模板字符串 -->
+	  	<my-component2></my-component2>
+
+	  	<hello msg="120"></hello>
+		<hello my-msg="'abc'"></hello>
+		<!-- <hello my-msg1="'abc111'"></hello> -->
+	</div>
+
+	<!--子组件向父组件传递数据-->
+	<div id="sss">
+	  	<hello3 @pfn="parentFn"></hello3>
+	</div>
+
+	<!-- 2 模板id -->
+	<script type="text/x-template" id="tpl">
+	  	<p>我的第二个模板（模板id）</p>
+	</script>
+
+	<script type="text/javascript" src="./lib/vue.js"></script>
+	<script type="text/javascript" src="./lib/axios.js"></script>
+	<script type="text/javascript" src="./lib/qs.js"></script>
+	<script type="text/javascript">
+		//将axios对象加到vue中
+		//Vue.prototype.$axios = axios;
+
+		//============= 注册全局组件 =========================================================================================
+		// 1 模板字符串
+		Vue.component('my-component', {
+			template: '<p>我的第一个模板（模板字符串）</p>',
+			data() {
+				return {
+					msg: '注意：组件的data必须是一个函数！！！'
+				}
+			}
+		});
+
+		// 2 模板id 
+		Vue.component('my-component1', {
+			template: '#tpl',
+			data() {
+				return {
+					msg: '注意：组件的data必须是一个函数！！！'
+				}
+			}
+		});
+
+
+
+
+		var vm = new Vue({
+			el: "#test-day3",
+			data: {
+				
+			}
+		});
+
+		//==============  组件通讯 ===================================================================================
+		//=============父组件到子组件 属性的值必须在组件中通过props属性显示指定  传递过来的props属性的用法与data属性的用法相同===================
+		var vm2 = new Vue({
+			el: "#test-day333",
+			components: {
+			    // <my-component> 将只在当前vue实例中使用
+			    'my-component2': {
+				 	template: '<div>局部模板</div>'
+				},
+				'hello': {
+			      	// 显式创建props及其传递过来的属性
+			      	props: ['msg', 'myMsg', 'myMsg1'],
+			      	template: '<h1>这是 hello 组件，这是消息：{{msg}} {{myMsg}} {{myMsg1}}--- </h1>'
+			    }
+			},
+			data: {
+				
+			}
+		});
+
+		//=========== 子组件到父组件   父组件给子组件传递一个函数，由子组件调用这个函数 ============================================================================
+		Vue.component('hello3', {
+			template: '<button @click="fn">按钮</button>',
+			methods: {
+			// 子组件：通过$emit调用
+				fn() {
+					this.$emit('pfn', '这是子组件传递给父组件的数据')
+				}
+			}
+		})
+		new Vue({
+			el: "#sss",
+			methods: {
+			// 父组件：提供方法
+				parentFn(data) {
+					console.log('父组件：', data)
+				}
+			}
+		})
+
+		
+	</script>
+</body>
+</html>
